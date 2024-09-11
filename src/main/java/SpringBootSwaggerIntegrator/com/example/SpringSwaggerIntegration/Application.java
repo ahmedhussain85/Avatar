@@ -39,11 +39,11 @@ public class Application {
 						.title("Custom API")
 						.description("This is a custom API description")
 						.version("1.0")
-						.contact(new Contact().name("API Support").email("support@example.com"))
+						.contact(new Contact().name("API Support").email("pedrostradioto@gmail.com"))
 						.license(new License().name("Apache 2.0").url("http://springdoc.org")))
 				.externalDocs(new ExternalDocumentation()
-						.description("External Documentation")
-						.url("https://example.com")) ;
+						.description("BankID Documentation")
+						.url("https://www.bankid.com/en/utvecklare/guider/teknisk-integrationsguide/rp-introduktion")) ;
 		//.addTagsItem(new Tag().name("custom-tag").description("This is a custom tag"));
 	}
 	//<---This is API Related(Swagger)--->
