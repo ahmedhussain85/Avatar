@@ -49,8 +49,8 @@ const AvatarCustomizer = memo(({ avatarProps, onAvatarPropsChange }) => {
             <option value="normal">Normal</option>
             <option value="thick">Thick</option>
             <option value="mohawk">Mohawk</option>
-            <option value="womanLong">Woman Long</option>
-            <option value="womanShort">Woman Short</option>
+            <option value="womanLong">Long</option>
+            <option value="womanShort">Short</option>
           </select>
         </label>
       </div>
@@ -89,7 +89,7 @@ const AvatarCustomizer = memo(({ avatarProps, onAvatarPropsChange }) => {
           Eyebrow Style:
           <select name="eyeBrowStyle" value={avatarProps.eyeBrowStyle} onChange={handleChange} className="ml-2">
             <option value="up">Up</option>
-            <option value="upWoman">Up Woman</option>
+            <option value="upWoman">Up W</option>
           </select>
         </label>
       </div>
@@ -151,7 +151,9 @@ const AvatarCustomizer = memo(({ avatarProps, onAvatarPropsChange }) => {
           <input type="color" name="bgColor" value={avatarProps.bgColor} onChange={handleChange} className="ml-2" />
         </label>
       </div>
+      
     </div>
+    
   );
 });
 
