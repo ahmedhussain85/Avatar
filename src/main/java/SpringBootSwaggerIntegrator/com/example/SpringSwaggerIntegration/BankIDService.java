@@ -1,44 +1,41 @@
 package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.MediaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Map;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.imageio.ImageIO;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import org.springframework.stereotype.Service;
-import java.io.ByteArrayOutputStream;
-import java.util.EnumMap;
 
 @Service
 public class BankIDService {
@@ -222,17 +219,30 @@ public class BankIDService {
     }
 
     // Method to continuously update QR code every second
-    public String generateAnimatedQrCode(String qrStartToken, String qrStartSecret, Instant orderTime) throws Exception {
-        while (orderTime.until(Instant.now(), ChronoUnit.SECONDS) < 30) {
-            String qrData = generateQrData(qrStartToken, qrStartSecret, orderTime);
-            BufferedImage qrCodeImage = generateQrCodeImage(qrData);
-            // Logic to stream or update the QR code on the front-end
-            // This can be extended based on how you intend to serve it (e.g., via WebSocket or similar)
+    public void generateAnimatedQrCode(String qrStartToken, String qrStartSecret, Instant orderTime, SseEmitter emitter) throws Exception {
+        try {
+            while (orderTime.until(Instant.now(), ChronoUnit.SECONDS) < 30) {
+                String qrData = generateQrData(qrStartToken, qrStartSecret, orderTime);
+                BufferedImage qrCodeImage = generateQrCodeImage(qrData);
+                
+                // Convert BufferedImage to Base64 string
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ImageIO.write(qrCodeImage, "png", baos);
+                String base64Image = Base64.getEncoder().encodeToString(baos.toByteArray());
 
-            // Wait 1 second before generating a new QR code
-            Thread.sleep(3000);
+                // Send the QR code data and image to the client
+                emitter.send(SseEmitter.event()
+                        .data("{\"qrCode\":\"" + qrData + "\",\"qrCodeImage\":\"" + base64Image + "\"}")
+                        .id(String.valueOf(System.currentTimeMillis()))
+                        .name("message"));
+
+                Thread.sleep(3000);
+            }
+            emitter.send(SseEmitter.event().data("QR code expired after 30 seconds.").name("message"));
+            emitter.complete();
+        } catch (Exception ex) {
+            emitter.completeWithError(ex);
         }
-        return "QR code expired after 30 seconds.";
     }
     public String generateBankIDUrl(String autoStartToken, String returnUrl) throws UnsupportedEncodingException {
         String encodedReturnUrl = URLEncoder.encode(returnUrl, StandardCharsets.UTF_8.toString());

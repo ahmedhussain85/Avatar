@@ -1,46 +1,48 @@
 package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.zxing.WriterException;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.time.Instant;
+import java.util.Base64;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.awt.*;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.time.Instant;
-import java.util.Map;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.zxing.WriterException;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Base64;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 public class BankIDController {
+    
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Autowired
     private BankIDService bankIDService;
-
+    
     @Operation(summary = "Get example data", description = "This method returns example data.")
     @GetMapping("/")
     public String index() {
         return "Greetings from Spring Boot!";
     }
 
-
+    @CrossOrigin(origins = "http://localhost:3001")
     @Operation(summary = "Start authentication", description = "This method returns data from BankID after contacting /auth end point")
     @PostMapping("/authenticate") // /auth
     public String authenticate(@RequestBody Map<String, Object> userData) throws IOException, URISyntaxException {
@@ -84,17 +86,24 @@ public class BankIDController {
         return bankIDService.signDoc(data);
     }
 
-
-    @PostMapping("/generateQrCode")
-    public String generateQrCode(@RequestBody Map<String, String> payload) throws Exception {
-        String qrStartToken = payload.get("qrStartToken");
-        String qrStartSecret = payload.get("qrStartSecret");
-
+    @CrossOrigin(origins = "http://localhost:3001")
+    @GetMapping(value = "/generateQrCode", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter generateQrCode(@RequestParam String qrStartToken, @RequestParam String qrStartSecret) {
+        SseEmitter emitter = new SseEmitter(31000L); // 31 seconds timeout
         Instant orderTime = Instant.now();
 
-        return bankIDService.generateAnimatedQrCode(qrStartToken, qrStartSecret, orderTime);
+        executorService.execute(() -> {
+            try {
+                bankIDService.generateAnimatedQrCode(qrStartToken, qrStartSecret, orderTime, emitter);
+            } catch (Exception ex) {
+                emitter.completeWithError(ex);
+            }
+        });
+
+        return emitter;
     }
 
+    
     @GetMapping("/getQrCodeImage")
     public String getQrCodeImage(@RequestParam String qrData) throws IOException, WriterException {
         BufferedImage qrCodeImage = bankIDService.generateQrCodeImage(qrData);
@@ -107,6 +116,8 @@ public class BankIDController {
         // Return the image as a base64 encoded string (this can be embedded in HTML <img> tag)
         return base64Image;
     }
+
+    @CrossOrigin(origins = "http://localhost:3001")
     @PostMapping("/generateBankIDUrl")
     public String generateBankIDUrl(@RequestBody Map<String, String> requestData) throws UnsupportedEncodingException {
         String autoStartToken = requestData.get("autoStartToken");
