@@ -1,4 +1,4 @@
-package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
+package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses;
 
 import java.util.List;
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import GameModal from './GameModal';
+import GameModal from '../components/GameModal';
 
 
 const GameModalDemo = () => {

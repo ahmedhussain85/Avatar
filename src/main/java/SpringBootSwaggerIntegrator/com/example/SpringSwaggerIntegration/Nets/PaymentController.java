@@ -1,4 +1,4 @@
-package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
+package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.Nets;
 
 
 import java.util.Map;
@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.CancelPaymentRequestDTO;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.ChargePaymentRequestDTO;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.PaymentRequest;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.ReferenceInformationDTO;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.RefundChargeRequestDTO;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.RefundPaymentRequestDTO;
 import jakarta.validation.Valid;
 
 

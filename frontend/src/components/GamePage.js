@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import GameModal from './GameModal';
+import GameModal from '../components/GameModal';
 import NiceAvatar from 'react-nice-avatar';
-import CountdownTimer from './CountdownTimer'; // Import CountdownTimer
+import CountdownTimer from '../components/CountdownTimer'; // Import CountdownTimer
 
 const MemoizedNiceAvatar = React.memo(NiceAvatar);
 
@@ -96,7 +96,7 @@ export default function GamePage() {
     <div className="p-8 flex flex-col items-center" style={{ backgroundColor: '#88dffc', minHeight: '100vh' }}>
       <h1 style={{ display: 'flex', justifyContent: 'center',marginBottom: '0px', color: '#0092D0', marginTop: '0px' }} className="text-3xl font-bold mb-4">Create your avatar</h1>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0px' }}>
-        <CountdownTimer initialTime={600} onCountdownEnd={handleCountdownEnd} />
+        <CountdownTimer initialTime={10} onCountdownEnd={handleCountdownEnd} />
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'center' }} className="mb-4">

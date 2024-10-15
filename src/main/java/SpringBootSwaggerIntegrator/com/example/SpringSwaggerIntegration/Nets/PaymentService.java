@@ -1,4 +1,4 @@
-package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
+package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.Nets;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +15,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.CancelPaymentRequestDTO;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.ChargePaymentRequestDTO;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.PaymentRequest;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.ReferenceInformationDTO;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.RefundChargeRequestDTO;
+import SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses.RefundPaymentRequestDTO;
 
 
 
@@ -50,8 +57,6 @@ public class PaymentService {
     @Value("${dibs.api.reference-information-path}")
     private String referenceInformationPathEndPoint;
 
-    //@Value("${dibs.api.order-items-path}")
-    //private String updateOrderEndPoint;
 
     @Value("${dibs.api.cancel-request-endpoint}")
     private String cancelRequestEndPoint;

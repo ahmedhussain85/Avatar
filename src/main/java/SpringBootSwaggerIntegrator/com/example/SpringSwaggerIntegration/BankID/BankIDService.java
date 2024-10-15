@@ -1,4 +1,4 @@
-package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
+package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.BankID;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -76,12 +76,6 @@ public class BankIDService {
 
         HttpEntity<String> request = new HttpEntity<>(jsonPayload, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
-
-        /*//Test
-        Desktop desktop = Desktop.getDesktop();
-        URI uri = new URI("http://www.google.com");
-        desktop.browse(uri);
-        //Test*/
 
         return response.getBody();
     }

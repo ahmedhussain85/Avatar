@@ -1,4 +1,4 @@
-package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
+package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.BankID;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;

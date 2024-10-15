@@ -1,15 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
+package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses;
 
 import java.util.List;
 
-public class CancelPaymentRequestDTO {
+public class RefundChargeRequestDTO {
     private int amount;
-    private List<OrderItem> orderItems; // Required field, even if empty
+    private List<OrderItem> orderItems;
+    private String myReference;
 
     // Getters and Setters
     public int getAmount() {
@@ -28,7 +24,14 @@ public class CancelPaymentRequestDTO {
         this.orderItems = orderItems;
     }
 
-    // Optional nested OrderItem class
+    public String getMyReference() {
+        return myReference;
+    }
+
+    public void setMyReference(String myReference) {
+        this.myReference = myReference;
+    }
+
     public static class OrderItem {
         private String reference;
         private String name;
@@ -41,7 +44,7 @@ public class CancelPaymentRequestDTO {
         private int netTotalAmount;
         private String imageUrl;
 
-        // Getters and Setters for OrderItem
+        // Getters and Setters
         public String getReference() {
             return reference;
         }
@@ -123,3 +126,4 @@ public class CancelPaymentRequestDTO {
         }
     }
 }
+

@@ -1,14 +1,17 @@
-package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
+package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration.DTOClasses;
 
 import java.util.List;
 
-public class RefundPaymentRequestDTO {
+public class ChargePaymentRequestDTO {
 
     private int amount;
-    private List<OrderItemDTO> orderItems;
+    private List<OrderItem> orderItems;
+    private Shipping shipping;
+    private boolean finalCharge;
     private String myReference;
+    private String paymentMethodReference;
 
-    // Getters and Setters
+    // Getters and setters for ChargePaymentRequestDTO
     public int getAmount() {
         return amount;
     }
@@ -17,12 +20,28 @@ public class RefundPaymentRequestDTO {
         this.amount = amount;
     }
 
-    public List<OrderItemDTO> getOrderItems() {
+    public List<OrderItem> getOrderItems() {
         return orderItems;
     }
 
-    public void setOrderItems(List<OrderItemDTO> orderItems) {
+    public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public Shipping getShipping() {
+        return shipping;
+    }
+
+    public void setShipping(Shipping shipping) {
+        this.shipping = shipping;
+    }
+
+    public boolean isFinalCharge() {
+        return finalCharge;
+    }
+
+    public void setFinalCharge(boolean finalCharge) {
+        this.finalCharge = finalCharge;
     }
 
     public String getMyReference() {
@@ -33,7 +52,16 @@ public class RefundPaymentRequestDTO {
         this.myReference = myReference;
     }
 
-    public static class OrderItemDTO {
+    public String getPaymentMethodReference() {
+        return paymentMethodReference;
+    }
+
+    public void setPaymentMethodReference(String paymentMethodReference) {
+        this.paymentMethodReference = paymentMethodReference;
+    }
+
+    // Nested OrderItem class
+    public static class OrderItem {
         private String reference;
         private String name;
         private double quantity;
@@ -45,7 +73,7 @@ public class RefundPaymentRequestDTO {
         private int netTotalAmount;
         private String imageUrl;
 
-        // Getters and Setters
+        // Getters and setters for OrderItem
         public String getReference() {
             return reference;
         }
@@ -126,4 +154,30 @@ public class RefundPaymentRequestDTO {
             this.imageUrl = imageUrl;
         }
     }
+
+    // Nested Shipping class
+    public static class Shipping {
+        private String trackingNumber;
+        private String provider;
+
+        // Getters and setters for Shipping
+        public String getTrackingNumber() {
+            return trackingNumber;
+        }
+
+        public void setTrackingNumber(String trackingNumber) {
+            this.trackingNumber = trackingNumber;
+        }
+
+        public String getProvider() {
+            return provider;
+        }
+
+        public void setProvider(String provider) {
+            this.provider = provider;
+        }
+    }
 }
+
+       
+

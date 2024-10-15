@@ -1,9 +1,9 @@
 //import logo from './logo.svg';
 import './App.css';
-import BankIDLogin from './BankIDLogin';
-import GameModalDemo from './GameModalDemo';
+import BankIDLogin from './components/BankIDLogin';
+import GameModalDemo from './components/GameModalDemo';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import GamePage from './GamePage'; // Import your GamePage component
+import GamePage from './components/GamePage'; // Import your GamePage component
 
 //<BankIDLogin/>
 //<GameModalDemo/>
