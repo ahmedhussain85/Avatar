@@ -8,15 +8,22 @@ export default function CountdownTimer({ initialTime, onCountdownEnd }) {
       setCountdown((prevCountdown) => {
         if (prevCountdown <= 1) {
           clearInterval(timer);
-          onCountdownEnd();
-          return 0;
+          return 0; // Set countdown to 0 after the timer ends
         }
         return prevCountdown - 1;
       });
     }, 1000);
 
     return () => clearInterval(timer); // Clear interval on component unmount
-  }, [onCountdownEnd]);
+  }, []);
+
+  useEffect(() => {
+    if (countdown === 0) {
+      onCountdownEnd(); // Call onCountdownEnd when countdown reaches zero
+    }
+  }, [countdown, onCountdownEnd]); // Depend on countdown and onCountdownEnd
 
   return <p className="mb-4">Game will pause in: {countdown} seconds</p>;
 }
+
+

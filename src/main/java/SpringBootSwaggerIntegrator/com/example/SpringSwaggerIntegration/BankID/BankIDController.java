@@ -49,6 +49,7 @@ public class BankIDController {
         return bankIDService.authenticate(userData);
     }
 
+    @CrossOrigin(origins = "http://localhost:3001")
     @Operation(summary = "Verify process status", description = "Checks process status each 2 seconds after contacting /collect end point.")
     @PostMapping("/status")
     public String checkStatus(@RequestBody Map<String, String> orderData) throws JsonProcessingException, InterruptedException {

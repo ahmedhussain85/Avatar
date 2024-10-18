@@ -1,3 +1,7 @@
+/*
+
+
+Correct flow but dont transfers data to gamePage
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
@@ -34,7 +38,7 @@ export default function BankIDLogin() {
           },
           body: JSON.stringify({
             endUserIp: ipData.ip,
-            requirement: {},
+            requirement: {}
           }),
         });
 
@@ -44,9 +48,8 @@ export default function BankIDLogin() {
 
         const authResult = await authResponse.json();
         setAuthData(authResult);
-        setOrderRef(authResult.orderRef); // Set orderRef in context
-        localStorage.setItem('orderRef', authResult.orderRef); // Store orderRef in localStorage
-
+        setOrderRef(authResult.orderRef); // Set orderRef in context immediately
+        console.log('Received orderRef:', authResult.orderRef); // Add this line
         console.log('Authentication successful:', authResult);
       } catch (err) {
         console.error('Error during initial setup:', err);
@@ -76,7 +79,7 @@ export default function BankIDLogin() {
         },
         body: JSON.stringify({
           autoStartToken: authData.autoStartToken,
-          returnUrl: "http://localhost:3001/game",
+          returnUrl: "http://localhost:3001/game"
         }),
       });
 
@@ -85,7 +88,7 @@ export default function BankIDLogin() {
       }
 
       const bankIdUrl = await urlResponse.text();
-
+      console.log('BankID URL generated:', bankIdUrl);
 
       window.location.href = bankIdUrl;
 
@@ -264,6 +267,76 @@ export default function BankIDLogin() {
 }
 
 
+works transfering data but goes directly to gamePage
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
+import { useAuth } from '../AuthContext';
 
+export default function BankIDLogin() {
+  const [isLoadingThis, setIsLoadingThis] = useState(false);
+  const [isLoadingOther, setIsLoadingOther] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [authData, setAuthData] = useState(null);
+  const [endUserIp, setEndUserIp] = useState('');
+  const [qrCode, setQrCode] = useState('');
+  const [qrCodeImage, setQrCodeImage] = useState('');
+  const eventSourceRef = useRef(null);
+  const hasAuthenticated = useRef(false);
+  const navigate = useNavigate();
+  const { setOrderRef } = useAuth();
+
+  useEffect(() => {
+    const fetchIpAndAuthenticate = async () => {
+      if (hasAuthenticated.current) return;
+      hasAuthenticated.current = true;
+
+      try {
+        const ipResponse = await fetch('http://localhost:3000/api/get-ip');
+        const ipData = await ipResponse.json();
+        setEndUserIp(ipData.ip);
+
+        const authResponse = await fetch('http://localhost:3000/authenticate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            endUserIp: ipData.ip,
+            requirement: {}
+          }),
+        });
+
+        if (!authResponse.ok) {
+          throw new Error('Authentication failed');
+        }
+
+        const authResult = await authResponse.json();
+        // Assume authResult contains orderRef
+        if (authResult.orderRef) {
+          setOrderRef(authResult.orderRef); // Set orderRef here
+          setSuccess(true);
+          navigate('/game'); // Navigate after setting orderRef
+        } else {
+          throw new Error('Order reference not found in authentication result.');
+        }
+      } catch (err) {
+        console.error('Error during authentication:', err);
+        setError(err.message);
+      }
+    };
+
+    fetchIpAndAuthenticate();
+  }, [setOrderRef, navigate]);
+
+  return (
+    <div>
+      {error && <p>Error: {error}</p>}
+      {isLoadingThis && <p>Loading...</p>}
+      {success && <QRCodeSVG value={qrCode} />}
+    </div>
+  );
+}/*
 
 

@@ -1,20 +1,20 @@
-//import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
 import BankIDLogin from './components/BankIDLogin';
-import GameModalDemo from './components/GameModalDemo';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import GamePage from './components/GamePage'; // Import your GamePage component
+import GamePage from './components/GamePage';
 
-//<BankIDLogin/>
-//<GameModalDemo/>
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<BankIDLogin />} />
-        <Route path="/game" element={<GamePage />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<BankIDLogin />} />
+          <Route path="/game" element={<GamePage />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
