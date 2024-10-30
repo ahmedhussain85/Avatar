@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { AuthProvider } from './AuthContext';
 import BankIDLogin from './components/BankIDLogin';
+import AvatarCreationPage from './components/AvatarCreationPage';
 import GamePage from './components/GamePage';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<BankIDLogin />} />
+          <Route path="/avatar" element={<AvatarCreationPage />} />
           <Route path="/game" element={<GamePage />} />
         </Routes>
       </Router>
