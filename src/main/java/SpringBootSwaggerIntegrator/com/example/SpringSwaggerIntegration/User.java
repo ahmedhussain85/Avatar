@@ -1,8 +1,16 @@
 package SpringBootSwaggerIntegrator.com.example.SpringSwaggerIntegration;
 
-import javax.persistence.*;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import com.fasterxml.jackson.databind.JsonNode;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -15,14 +23,14 @@ public class User {
     @Column(name = "person_number", unique = true, nullable = false)
     private String personNumber;
 
-    @Type(type = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private JsonNode avatarInfo;
 
     @Column(name = "has_paid", nullable = false)
     private boolean hasPaid;
 
-    // Getters and Setters
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -55,5 +63,4 @@ public class User {
         this.hasPaid = hasPaid;
     }
 }
-
 
