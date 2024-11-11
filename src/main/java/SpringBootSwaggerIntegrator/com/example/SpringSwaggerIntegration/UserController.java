@@ -57,6 +57,7 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @CrossOrigin(origins = "http://localhost:3001")
     @DeleteMapping("/{personNumber}")
     public ResponseEntity<Void> deleteUser(@PathVariable String personNumber) {
         userService.deleteUser(personNumber);

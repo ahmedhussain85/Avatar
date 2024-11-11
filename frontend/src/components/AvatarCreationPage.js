@@ -196,13 +196,28 @@ export default function AvatarCreationPage() {
     });
   }, []);
 
-  const randomizeAvatar = useCallback(() => {
-    const newAvatarProps = Object.keys(avatarProps).reduce((acc, key) => {
-      const randomValue = options[key][Math.floor(Math.random() * options[key].length)];
-      return { ...acc, [key]: randomValue };
-    }, {});
+  const randomizeAvatar = () => {
+    const newAvatarProps = { ...avatarProps };
+  
+    for (const key in avatarProps) {
+      // Check if the key exists in options
+      if (options.hasOwnProperty(key)) {
+        // Validate if the value exists in the options list
+        if (options[key].includes(avatarProps[key])) {
+          const randomValue = options[key][Math.floor(Math.random() * options[key].length)];
+          newAvatarProps[key] = randomValue;
+        } else {
+          console.warn(`Invalid value for ${key}: ${avatarProps[key]}. Setting to a random value.`);
+          // Set to a random value from the options
+          newAvatarProps[key] = options[key][Math.floor(Math.random() * options[key].length)];
+        }
+      } else {
+        console.warn(`Key ${key} is not in options, skipping randomization.`);
+      }
+    }
+  
     setAvatarProps(newAvatarProps);
-  }, [avatarProps]);
+  };//, [avatarProps]);
 
   const handleNameChange = (e) => {
     setUserName(e.target.value);
