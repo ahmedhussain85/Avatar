@@ -20,27 +20,30 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<User> getUserByPersonNumber(String personNumber) {
+        return userRepository.findByPersonNumber(personNumber);
     }
 
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
-    public Optional<User> updateUser(Long id, User updatedUser) {
-        return userRepository.findById(id).map(user -> {
+    public Optional<User> updateUser(String personNumber, User updatedUser) {
+        return userRepository.findByPersonNumber(personNumber).map(user -> {
             user.setPersonNumber(updatedUser.getPersonNumber());
             user.setAvatarInfo(updatedUser.getAvatarInfo());
             user.setHasPaid(updatedUser.isHasPaid());
+            user.setUserType(updatedUser.getUserType());
+            user.setHasLicense(updatedUser.isHasLicense());
             return userRepository.save(user);
         });
     }
 
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(String personNumber) {
+        userRepository.deleteByPersonNumber(personNumber);
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 }
-
-
-
